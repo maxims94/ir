@@ -1,0 +1,40 @@
+# Intelligent Reader
+
+* Can be used as a RSS Reader
+
+## Accumulating information base
+
+* Source: RSS feeds
+* Database
+    * SQLite?
+* Format: Title | Abstract | Source | 
+* In genera: (Info1 | Info2 | ... | InfoN) | Y/N
+
+## Categorizing information
+
+* Categorize information by supplying the Y/N information, i.e. is this particular information useful?
+* In RSS Reader: Click on the item => Y; Skip it => N
+
+## Infering information
+
+* Which type of rules?
+* How to represent in plaintext format?
+
+* Example: 
+    * Rule: Title.contains(politics) > Title.contains(economics)
+    * Items will be sorted accordingly
+
+## Unsupervised models combined with supervised
+
+* Use case
+    * The user creates a container named A
+    * The user adds items X, Y and Z
+    * The application discovers a pattern in X, Y, Z (e.g. Title.contains("geo"))
+    * The application automatically adds the corresponding items to the categories
+
+## Free parameters of the model
+
+* The order in which information items are displayed
+* The categories in which items are sorted
+    * Accumulation of similar information items into containers
+    * e.g. all football-related items from "Faz" and "Zeit" go to the container "Football"

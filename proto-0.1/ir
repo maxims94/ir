@@ -1,0 +1,78 @@
+#!/usr/bin/python
+
+import json
+import os.path
+import sys
+import random
+import irlib
+
+with open('database', 'r') as f:
+    db = json.load(f)
+
+rules = None
+
+if os.path.isfile("rules"):
+    with open('rules', 'r') as f:
+        rules = json.load(f)
+
+def write_db(db):
+    with open('database', 'w') as f:
+        json.dump(db, f)
+
+def calc_item_value(item):
+    kw = irlib.get_keywords(item['title'])
+    val = 0
+    for k in kw:
+        if k in rules:
+            val += rules[k]
+    return val
+
+def main(mode):
+
+    sdb = []
+
+    if rules == None:
+        sdb = sorted(db, reverse=True, key=lambda item: item['published'])
+    else:
+        for e in db:
+            e['value'] = calc_item_value(e)
+            sdb.append(e)
+
+        sdb = sorted(sdb, reverse=True, key=lambda item: item['value'])
+
+    if mode == "SHOW":
+        for item in sdb:
+            if rules == None:
+                print(item['title'])
+            else:
+                print(item['value'], "|", item['title'])
+
+    elif mode == "PROCESS":
+        for item in sdb:
+            if 'class' in item:
+                continue
+
+            print(">>>",item['title'])
+            print(item['summary'][:300])
+            choice = input("Does this item contain useful information (Y/N)?: ").lower()
+            if choice == "y":
+                print("Mark as useful.")
+                item['class'] = 1
+                write_db(sdb)
+
+            elif choice == "n":
+                print("Mark as useless.")
+                item['class'] = 0
+                write_db(sdb)
+
+            elif choice == "c":
+                print("Cancel.")
+            else:
+                print("Skip item")
+        
+
+if __name__ == "__main__":
+    if len(sys.argv) == 1:
+        main("SHOW")
+    elif sys.argv[1] == "-p":
+        main("PROCESS")

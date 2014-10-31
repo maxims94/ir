@@ -1,0 +1,18 @@
+# Prototype 0.1
+
+* src
+    * list of *.rss
+
+* ir-load
+    * loads the individual rss feeds into a JSON database
+
+* ir [rules] (main application)
+    * iterates over all items
+    * can be started with "rules" parameter defining the rules to be used
+    * asks the user: Y/N? to categorize the information
+
+* ir-learn
+    * applies ML techniques to database
+    * output: rules (list of rules)
+
+* How to create tests?
