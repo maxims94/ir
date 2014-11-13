@@ -3,6 +3,8 @@ import json
 import dateutil.parser
 import re
 
+from item import Item
+
 class RSS:
 
     def get_items_by_url(url):

@@ -10,20 +10,19 @@ from present import Present
 from rss import RSS
 
 parser = argparse.ArgumentParser()
-parser.add_argument("mode", type=str, choices=["update", "learn", "classify", "show"])
+parser.add_argument("mode", type=str, choices=["load", "learn", "classify", "show"])
 args = parser.parse_args()
 m = args.mode
 
 db = Database.read()
-model = None
 
 #
 # Update
 #
 
-if m == "update":
+if m == "load":
 
-    print("Update database.")
+    print("Load database.")
 
     for url in open('src', 'r'):
 
@@ -48,10 +47,13 @@ if m == "classify":
 
     for item in db.get_items():
 
-        print(">>> {}".format(item.title))
-        print(item['summary'][:300])
+        if item.is_classified():
+            continue
 
-        choice = input("Is this useful (Y/N)?: ").lower()
+        print(">>> {}".format(item.title))
+        print(item.summary[:300])
+
+        choice = input("Is this useful ([Y]es/[N]o/[A]bort)?: ").lower()
 
         if choice == "y":
             item.set_class(1)
@@ -61,7 +63,7 @@ if m == "classify":
             item.set_class(0)
             Database.write(db)
 
-        elif choice == "c":
+        elif choice == "a":
             print("Cancel.")
             break
         else:
@@ -78,7 +80,10 @@ if m == "learn":
     model = Model(db)
     model.generate()
 
+    print(repr(model))
+
     print("Write to 'model'.")
+    Model.write(model)
 
 #
 # Show
@@ -88,8 +93,12 @@ if m == "show":
 
     present = Present(db)
 
-    print("Show without model")
-    present.show()
+    if os.path.isfile('model'):
+        print("Show with model")
+        mo = Model.read(db)
+        present.show(model=mo)
 
-    print("Show with model")
-    present.show(model)
+    else:
+        print("Show without model")
+        present.show()
+
