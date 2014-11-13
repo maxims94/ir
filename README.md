@@ -8,3 +8,6 @@
 * Run ./main classify
 * Run ./main learn
 * Run ./main show
+
+## Ubuntu 14.04
+If any problems with the feedparser module occur, try [this](https://code.google.com/p/feedparser/issues/detail?id=429&colspec=ID%20Status%20Namespace%20Summary)
