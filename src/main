@@ -1,0 +1,95 @@
+#!/usr/bin/python3
+
+import argparse
+import os
+
+from database import Database
+from item import Item
+from model import Model
+from present import Present
+from rss import RSS
+
+parser = argparse.ArgumentParser()
+parser.add_argument("mode", type=str, choices=["update", "learn", "classify", "show"])
+args = parser.parse_args()
+m = args.mode
+
+db = Database.read()
+model = None
+
+#
+# Update
+#
+
+if m == "update":
+
+    print("Update database.")
+
+    for url in open('src', 'r'):
+
+        print("Process: {}".format(url))
+        items = RSS.get_items_by_url(url)
+
+        for i in items:
+            print("Item: {}".format(i))
+            db.add(i)
+
+    print("Write to 'database'.")
+
+    Database.write(db)
+
+#
+# Classify
+#
+
+if m == "classify":
+
+    print("Classify items.")
+
+    for item in db.get_items():
+
+        print(">>> {}".format(item.title))
+        print(item['summary'][:300])
+
+        choice = input("Is this useful (Y/N)?: ").lower()
+
+        if choice == "y":
+            item.set_class(1)
+            Database.write(db)
+
+        elif choice == "n":
+            item.set_class(0)
+            Database.write(db)
+
+        elif choice == "c":
+            print("Cancel.")
+            break
+        else:
+            print("Skip item")
+
+#
+# Learn
+#
+
+if m == "learn":
+
+    print("Generate model.")
+
+    model = Model(db)
+    model.generate()
+
+    print("Write to 'model'.")
+
+#
+# Show
+#
+
+if m == "show":
+
+    present = Present(db)
+
+    print("Show without model")
+    present.show()
+
+    print("Show with model")
+    present.show(model)
