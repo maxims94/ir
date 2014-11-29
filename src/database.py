@@ -7,6 +7,7 @@ class Database:
 
     def __init__(self):
         self.__items = []
+        self.read()
 
     def get_items(self):
         return self.__items
@@ -17,18 +18,22 @@ class Database:
         else:
             print("Duplicate discovered.")
 
-    def read():
-        db = Database()
-
+    def read(self):
         if os.path.isfile('database'):
             with open('database', 'r') as f:
-                d = json.load(f)
-                for item in d:
-                    db.add(Item.from_json(item))
+                # d = json.load(f)
+                # for item in d:
+                #     print(d)
+                #     self.add(Item().from_json(d))
+                print("article")
+                articles = json.load(f)
+                print(articles)
+                for article in articles:
+                    item = Item()
+                    item.from_json(article)
+                    self.add(item)
 
-        return db
-
-    def write(db):
+    def write(self):
         with open('database', 'w') as f:
             flatten = list(map((lambda x: x.flat()), db.get_items()))
             json.dump(flatten, f)

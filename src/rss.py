@@ -7,15 +7,19 @@ from item import Item
 
 class RSS:
 
+    @staticmethod
     def get_items_by_url(url):
-
         items = []
-
+        print("Load data")
         url = url.strip()
 
         f = feedparser.parse(url)
         if len(f.entries) == 0:
+            print("len null")
             return items
+
+        print("Load data")
+        print (f.entries)
 
         for item in f.entries:
 
@@ -29,10 +33,6 @@ class RSS:
                 summary = re.sub('<[^<]+?>', '', summary)
                 obj.summary = summary
 
-            if 'published' in item:
-                published = item['published']
-                published = dateutil.parser.parse(published).timestamp()
-                obj.published = int(published)
 
             obj.source = url
 

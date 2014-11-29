@@ -46,13 +46,10 @@ class Item:
         else:
             return self.title
 
-    def from_json(d):
-        obj = Item()
-
-        obj.title = d['title']
-        obj.summary = d['summary']
-        obj.published = d['published']
-        obj.source = d['source']
-        obj.class_ = d['class_']
-
-        return obj
+    def from_json(self, d):
+        print(d['title'])
+        self.title = d['title']
+        self.summary = d['summary']
+        self.published = d['published']
+        self.source = d['source']
+        self.class_ = d['class_']

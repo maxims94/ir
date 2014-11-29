@@ -1,0 +1,117 @@
+#!/usr/bin/python
+
+import sys
+from database import Database
+from rss import RSS
+
+from PyQt4 import Qt as qt
+from PyQt4 import QtGui, QtCore
+
+
+class RssListWidgetItem(QtGui.QTreeWidgetItem):
+	"""docstring for RssListWidgetItem"""
+	def __init__(self, parent, title, description, textEdit):
+		super(RssListWidgetItem, self).__init__(parent)
+		self.title = title
+		self.description = description
+		self.textEdit = textEdit
+		self.setText(0, title)
+
+class AddRssFeedDialog(QtGui.QDialog):
+	"""docstring for AddRssFeedDialog"""
+	def __init__(self):
+		super(AddRssFeedDialog, self).__init__()
+		
+
+def handleAddRssFeed(self):
+	print("Handle add")
+	
+
+def handleNewItemClicked(widget):
+	# Click on top
+	if hasattr(widget, 'textEdit'): 
+		widget.textEdit.setPlainText(widget.description)
+	else:
+		print("Expand tree")
+		widget.setExpanded(True)
+		print(widget.childCount())
+
+class Example(QtGui.QMainWindow):
+    
+    def __init__(self):
+        super(Example, self).__init__()
+        # init dock
+        self.dock = QtGui.QDockWidget("Rss Feads")
+        self.dock.setAllowedAreas(qt.Qt.LeftDockWidgetArea)
+
+        self.addDockWidget(qt.Qt.LeftDockWidgetArea, self.dock)
+        rssList = QtGui.QTreeWidget(self.dock)
+        rssList.setColumnCount(1)
+        #init mainWindow
+        self.textEdit = QtGui.QPlainTextEdit(self)
+        self.textEdit.setReadOnly(True)
+        self.setCentralWidget(self.textEdit)
+        self.db = Database()
+
+        #widgetItem = QtGui.QListWidgetItem("Entry", rssList)
+
+
+        # for url in open("src", "r"):
+        # 	url = url.strip()
+        # 	print(url)
+        # 	topTreeWidgetItem = QtGui.QTreeWidgetItem(0)
+        # 	topTreeWidgetItem.setText(0, url)
+        # 	widgetItem = RssListWidgetItem(topTreeWidgetItem, "Entry", "Another Boring topic",
+        # 				 self.textEdit)
+        # 	widgetItem1 = RssListWidgetItem(topTreeWidgetItem, "Entry", "Bla bla",
+        # 				 self.textEdit)
+        # 	widgetItem2 = RssListWidgetItem(topTreeWidgetItem, "Entry", "Bla bla",
+        # 				 self.textEdit)
+        # 	topTreeWidgetItem.addChild(widgetItem)
+        # 	rssList.addTopLevelItem(topTreeWidgetItem)
+
+       
+        print(self.db.get_items())
+
+        rssList.show()
+
+        self.dock.setWidget(rssList)
+
+        rssList.itemClicked.connect(handleNewItemClicked)
+
+        self.initUI()
+        
+    def initUI(self):               
+        
+        exitAction = QtGui.QAction(QtGui.QIcon('exit.png'), '&Exit', self)        
+        exitAction.setShortcut('Ctrl+Q')
+        exitAction.setStatusTip('Exit application')
+        exitAction.triggered.connect(QtGui.qApp.quit)
+
+        addRssFeedAction = QtGui.QAction( 'Add Rss Feed', self)        
+        addRssFeedAction.setShortcut('Ctrl+N')
+        addRssFeedAction.setStatusTip('Add another rss Feed')
+        addRssFeedAction.triggered.connect(handleAddRssFeed)
+
+        self.statusBar()
+
+        menubar = self.menuBar()
+        fileMenu = menubar.addMenu('&File')
+        fileMenu.addAction(exitAction)
+        fileMenu.addAction(addRssFeedAction)
+
+        
+        self.setGeometry(300, 300, 300, 200)
+        self.setWindowTitle('Menubar')    
+        self.show()
+        
+        
+def main():
+    
+    app = QtGui.QApplication(sys.argv)
+    ex = Example()
+    sys.exit(app.exec_())
+
+
+if __name__ == '__main__':
+    main()    
