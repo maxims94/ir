@@ -1,0 +1,19 @@
+#!/usr/bin/python3
+
+from src.interface import Interface
+
+import logging
+import traceback
+import os.path
+
+if os.path.isfile('ir.log'):
+    os.remove('ir.log')
+
+logging.basicConfig(filename='ir.log', level=logging.DEBUG, format='(%(asctime)s) %(message)s', datefmt='%I:%M:%S')
+logging.debug("Intelligent Reader started")
+
+try:
+    Interface.run()
+except BaseException as e:
+    logging.critical(traceback.format_exc())
+

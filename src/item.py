@@ -6,19 +6,24 @@ class Item:
         self.summary = None
         self.published = 0
         self.source = None
-        self.class_ = None
-
-    def is_classified(self):
-        return self.class_ != None
+        self.link = None
+        self.class_ = 0
 
     def set_class(self, val):
+        assert val == 0 or val == 1;
         self.class_ = val
 
     def get_class(self):
         return self.class_
 
+    def get_link(self):
+        return self.link
+
     def is_positive_class(self):
-        return int(self.class_) == 1
+        if self.class_ :
+            return int(self.class_) == 1
+        else :
+            return False
 
     def has_title(self):
         return self.title != None
@@ -29,6 +34,7 @@ class Item:
             'summary': self.summary,
             'published': self.published,
             'source': self.source,
+            'link': self.link,
             'class_': self.class_
         }
 
@@ -40,11 +46,13 @@ class Item:
         return not __eq__(self, other)
     
     def __str__(self):
-
         if self.title == None:
             return "None"
         else:
             return self.title
+
+    def __repr__(self):
+        return self.__str__()
 
     def from_json(d):
         obj = Item()
@@ -53,6 +61,7 @@ class Item:
         obj.summary = d['summary']
         obj.published = d['published']
         obj.source = d['source']
+        obj.link = d['link']
         obj.class_ = d['class_']
 
         return obj

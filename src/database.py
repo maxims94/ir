@@ -1,7 +1,7 @@
 import os
 import json
 
-from item import Item
+from src.item import Item
 
 class Database:
 
@@ -13,9 +13,10 @@ class Database:
 
     def add(self, item):
         if not item in self.__items:
-            self.__items.append(item)
+            return self.__items.append(item)
         else:
-            print("Duplicate discovered.")
+            return False
+            #print("Duplicate discovered.")
 
     def read():
         db = Database()

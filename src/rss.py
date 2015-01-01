@@ -2,8 +2,9 @@ import feedparser
 import json
 import dateutil.parser
 import re
+import logging
 
-from item import Item
+from src.item import Item
 
 class RSS:
 
@@ -19,6 +20,8 @@ class RSS:
 
         for item in f.entries:
 
+            #logging.debug(item)
+
             obj = Item()
 
             if 'title' in item:
@@ -33,6 +36,12 @@ class RSS:
                 published = item['published']
                 published = dateutil.parser.parse(published).timestamp()
                 obj.published = int(published)
+
+            if 'links' in item:
+                if 'href' in item['links'][0]:
+                    obj.link = item['links'][0]['href']
+
+            #logging.debug(obj.link)
 
             obj.source = url
 
