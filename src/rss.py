@@ -34,7 +34,13 @@ class RSS:
 
             if 'published' in item:
                 published = item['published']
-                published = dateutil.parser.parse(published).timestamp()
+
+                try:
+                    published = dateutil.parser.parse(published).timestamp()
+                except:
+                    logging.warning("Unable to parse due to invalid 'published' value: '{}'".format(item))
+                    continue
+
                 obj.published = int(published)
 
             if 'links' in item:
