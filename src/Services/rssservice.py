@@ -1,17 +1,15 @@
 import feedparser
 import re
 import os
+import dateutil.parser
 
 from Model.item import create_tables, Item
 
 """Import Feeds and put them into the database """
 def importFeeds():
 
-    # Construct File path to config relative to this file
-    # This allows us to start the script from any directory
-    pathToConfigFile = os.path.join(os.path.dirname(__file__), '../../config/src.txt')
-
-    for url in open(pathToConfigFile, "r"):
+    urls = ["http://www.faz.net/rss/aktuell/politik", "http://newsfeed.zeit.de/gesellschaft/index"]
+    for url in urls:
         print("Process:", url)
         url = url.strip()
 
@@ -28,5 +26,19 @@ def importFeeds():
                 new_item.summary = re.sub('<[^<]+?>', '', summary)
 
             if 'published' in item:
-                new_item.published = item['published']
+                published = item['published']
+
+                try:
+                    published = dateutil.parser.parse(published).timestamp()
+                except:
+                    logging.warning("Unable to parse due to invalid 'published' value: '{}'".format(item))
+                    continue
+
+                new_item.published = int(published)
+
+            if 'links' in item:
+                if 'href' in item['links'][0]:
+                    new_item.link = item['links'][0]['href']
+
+            new_item.source = url
             new_item.save()
