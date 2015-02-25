@@ -1,10 +1,10 @@
 #!/bin/python3
-
 import sys
 import os
 sys.path.insert(1, os.path.dirname(sys.path[0]))
 import model
 import random
+from rules_collection import RulesCollection
 from Services import rssservice
 
 def create():
@@ -19,9 +19,8 @@ def create():
 def rules():
   print("Apply rules to database")
   items = model.Item.select(); 
-  class_rules = [{}]
-  for rule in class_rules:
-    apply_rule(rule, items)
+  rl = RulesCollection(items)
+  rl.random(0.3)
   for item in items:
     print("%s | %s" % (str(item.class_), item.title))
     item.save()
