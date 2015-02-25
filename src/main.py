@@ -5,7 +5,6 @@ import curses
 
 from Model.item import create_tables, Item
 from Services.rssservice import importFeeds
-from Model.item import *
 from View.Interface import Interface
 
 def main(screen):
@@ -22,8 +21,8 @@ def main(screen):
         importFeeds()
         query = Item.select()
         numItems = query.count()
-        #interface = Interface(query, screen, numItems)
-        #interface.display()
+        interface = Interface(query, screen, numItems)
+        interface.display()
     except BaseException as e:
         logging.critical(traceback.format_exc())
 
