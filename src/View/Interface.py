@@ -31,20 +31,27 @@ class Interface(object):
         self.panel.top()
         self.panel.show()
         self.window.clear()
+        self.menu = curses.newwin(50, 100)
+        self.menu.keypad(True)
+
 
         while True:
-            self.window.refresh()
+            self.window.clear()
+            self.menu.clear()
+            self.menu.refresh()
+
             curses.doupdate()
-            for index, item in enumerate(self.items):
+
+            for index, item in enumerate(self.items[self.position:]):
                 if index == self.position:
                     mode = curses.A_REVERSE
                 else:
                     mode = curses.A_NORMAL
+                msg = '%d. %s' % (index+self.position, item.title)
+                self.menu.addstr(1+index, 1, msg, mode)
 
-                msg = '%d. %s' % (index, item.title)
-                self.window.addstr(1+index, 1, msg, mode)
 
-            key = self.window.getch()
+            key = self.menu.getch()
 
             if key in [curses.KEY_ENTER, ord('\n')]:
                 # insert rules here
@@ -74,7 +81,7 @@ class Interface(object):
                 logging.debug("Pressed q: Quit")
                 break
 
-        self.window.clear()
+        self.menu.clear()
         self.panel.hide()
         panel.update_panels()
         curses.doupdate()
