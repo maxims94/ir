@@ -36,19 +36,18 @@ class Interface(object):
 
 
         while True:
-            self.window.clear()
             self.menu.clear()
             self.menu.refresh()
 
             curses.doupdate()
 
             for index, item in enumerate(self.items[self.position:]):
-                if index == self.position:
+                if index == 0:
                     mode = curses.A_REVERSE
                 else:
                     mode = curses.A_NORMAL
                 msg = '%d. %s' % (index+self.position, item.title)
-                self.menu.addstr(1+index, 1, msg, mode)
+                self.menu.addstr(index+1, 1, msg, mode)
 
 
             key = self.menu.getch()
@@ -66,12 +65,16 @@ class Interface(object):
             elif key == ord("h"):
                 # Set Class to 0
                 entry = self.items[self.position]
+                entry.read = True
+                entry.save()
                 logging.debug("Pressed h: Class = 0 for '%s'", entry.title)
 
             elif key == ord("l"):
                 # Set Class to 1
                 entry = self.items[self.position]
-                logging.debug("Pressed h: Class = 0 for '%s'", entry.title)
+                entry.read = False
+                entry.save()
+                logging.debug("Pressed h: Class = 1 for '%s'", entry.title)
 
             elif key == ord("r"):
                 logging.debug("Pressed r: Reload database, regenerate model")
