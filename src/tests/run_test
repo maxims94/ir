@@ -1,5 +1,5 @@
 #!/bin/bash
 
-python3 test.py create
-python3 test.py rules
-python3 test.py show
+python3 manage_test_db.py create
+python3 manage_test_db.py rules
+python3 manage_test_db.py show

@@ -20,14 +20,10 @@ def rules():
   print("Apply rules to database")
   items = model.Item.select(); 
   rl = RulesCollection(items)
-  rl.random(0.3)
+  rl.random(0.5)
   for item in items:
     print("%s | %s" % (str(item.class_), item.title))
     item.save()
-
-def apply_rule(rule, items):
-  for item in items:
-    item.class_ = random.randint(0,1)
 
 def show():
   print("Show database")
