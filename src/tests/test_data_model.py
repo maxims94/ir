@@ -16,7 +16,6 @@ for item in items:
   items_arr.append(item) 
 
 num_total = len(items_arr)
-print(num_total)
 num_test = int(TEST_SIZE * num_total)
 
 test_sample = random.sample(items_arr, num_test)
@@ -37,9 +36,10 @@ for item in training_sample:
 #data_model = RandomDataModel()
 data_model = KeywordDataModel()
 data_model.train(training_sample)
-print ("Trained model: %s" % str(data_model))
+
+print ("---------- Trained model: ------------------ \n%s\n" % str(data_model))
  
-print ("Classification result:")
+print ("---------- Classification: -----------------")
 
 num_correct = 0
 for item in test_sample:
